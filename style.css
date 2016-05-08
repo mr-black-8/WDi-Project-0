@@ -1,0 +1,33 @@
+.body {
+  overflow: hidden;
+}
+
+.flexContainer {
+  height: 95vh;
+  width: 95vw;
+  display: flex;
+}
+
+.gameboard {
+  margin: auto;
+  width: 650px;
+  height: 650px;
+  vertical-align: middle;
+}
+
+.square {
+  width: 200px;
+  height: 200px;
+  background: gainsboro;
+  border: 3px solid white;
+  float: left;
+}
+
+.square img {
+  position: relative;
+  margin: 45px;
+}
+
+/*.square:hover {
+  opacity: 0.65;
+}*/
