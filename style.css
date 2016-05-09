@@ -26,6 +26,7 @@
 .square img {
   position: relative;
   margin: 45px;
+  -webkit-animation-duration: 0.3s;
 }
 
 /*.square:hover {
