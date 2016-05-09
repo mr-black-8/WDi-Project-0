@@ -6,6 +6,7 @@
   height: 95vh;
   width: 95vw;
   display: flex;
+  align-content: center;
 }
 
 .gameboard {

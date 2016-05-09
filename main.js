@@ -45,13 +45,10 @@ var computerMove = function () {
   }
 
   if(winCheck(x,y)) {
-    swal("Computer Wins!");
-    resetBoard();
-    return;
-  } else {
-    return;
+    swal({title: "Computer Wins!"},resetBoard);
+  } else if(tieCheck()) {
+    swal({title: "It's a Tie!"},resetBoard);
   }
-
 };
 
 //Player move, called when square is clicked. id of 'this' square is converted to (x,y), add 'x' at gameboard[x][y], calls insertCross
@@ -70,13 +67,12 @@ var playerMove = function () {
   }
 
   if(winCheck(x,y)) {
-    alert("Player Wins!");
-    // swal("Player Wins!");
-    resetBoard();
+    swal({title: "Player Wins!"},resetBoard);
+  } else if(tieCheck()) {
+    swal({title: "It's a Tie!"},resetBoard);
   } else {
     window.setTimeout( computerMove, 200 );
   }
-
 };
 
 // check each line for win condition.
@@ -121,6 +117,18 @@ var winCheck = function(x,y) {
   }
 };
 
+var tieCheck = function() {
+  // debugger;
+  for( var i = 0; i < gameboard.length; i++ ){
+    for( var j = 0; j < gameboard[i].length; j ++ ) {
+      if( gameboard[i][j] === "" ) {
+        return false
+      }
+    }
+  }
+  return true;
+};
+
 //Clear gameboard array and img src from .square divs.
 var resetBoard = function() {
 
@@ -142,3 +150,8 @@ var resetBoard = function() {
 };
 
 $( ".square" ).on( "click", playerMove );
+
+// Hardmode computer move..... pseudo to come...
+var computerMoveHard = function() {
+
+};
