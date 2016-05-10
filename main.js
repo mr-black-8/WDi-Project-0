@@ -12,7 +12,7 @@ var playerOne = {
 
 var playerTwo = {
   name: "Player 2",
-  human: true,
+  human: false,
   faction: "Norse",
   icon: "o",
   iconSrc: "images/shieldtp.png",
@@ -66,10 +66,13 @@ var computerMove = function () {
     computerMove();
   }
 
+  removeLoadOver();
+
   if(winCheck(x,y)) {
     swal({title: "Computer Wins!"},resetBoard);
+    curPlayer.score += 1;
   } else if(tieCheck()) {
-    swal({title: "It's a Tie!"},resetBoard);
+    swal({title: "It's a tie!"},resetBoard);
   }
   curPlayer = playerOne
 };
@@ -91,8 +94,9 @@ var playerMove = function () {
 
   if(winCheck(x,y)) {
     swal({title: curPlayer.name + " Wins!"},resetBoard);
+    curPlayer.score += 1;
   } else if(tieCheck()) {
-    swal({title: "It's a Tie!"},resetBoard);
+    swal({title: "It's a tie!"},resetBoard);
   } else {
     if(curPlayer === playerOne) {
       curPlayer = playerTwo;
@@ -100,7 +104,9 @@ var playerMove = function () {
       curPlayer = playerOne;
     }
     if(!curPlayer.human){
-      window.setTimeout( computerMove, 200 );
+      addLoadOver();
+      var num = (Math.random() * 1000)
+      window.setTimeout( computerMove, num );
     }
   }
 };
@@ -261,11 +267,26 @@ var menuSplash = function() {
   var $bgDiv = $( "<div></div>" )
   var $menuDiv = $( "<div></div>" )
 
-  $bgDiv.attr("class", "menuBG");
+  $bgDiv.attr("class", "coverBG");
   $menuDiv.attr("class", "menu");
 
   $( ".flexContainer" ).css("-webkit-filter", "blur(5px)")
   $( "body" ).prepend($bgDiv);
-  $( ".menuBG" ).prepend($menuDiv);
+  $( ".coverBG" ).prepend($menuDiv);
 
 };
+
+var addLoadOver = function() {
+  var $splashDiv = $("<div></div>");
+  var $spinDiv = $("<div></div>");
+
+  $splashDiv.attr("class", "coverBG");
+  $spinDiv.attr("class", "loader");
+
+  $("body").prepend($splashDiv);
+  $(".coverBG").append($spinDiv);
+}
+
+var removeLoadOver = function() {
+  $(".coverBG").remove();
+}
