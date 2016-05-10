@@ -1,10 +1,30 @@
-// Gameboard array (x,y) co-ords from top left match array index.
+// Gameboard array - (x,y) co-ords from top left match array index.
 var gameboard = [["","",""],["","",""],["","",""]]
 
+var playerOne = {
+  name: "Player 1",
+  human: true,
+  faction: "Christian",
+  icon: "x",
+  iconSrc: "images/crosstp.png",
+  score: 0
+};
+
+var playerTwo = {
+  name: "Player 2",
+  human: true,
+  faction: "Norse",
+  icon: "o",
+  iconSrc: "images/shieldtp.png",
+  score: 0
+};
+
+var curPlayer = playerOne;
+
 //Animate Shield image to square based on id paramater given
-var insertShield = function (iD) {
+var insertIcon = function (iD) {
   var $curID = $( "#" + iD )
-  $curID.children().attr("src", "images/shieldtp.png");
+  $curID.children().attr("src", curPlayer.iconSrc);
   $curID.children().addClass("animated bounceIn").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
     $(this).removeClass();
   });
@@ -30,18 +50,17 @@ var shakeIcon = function (iD) {
   return;
 };
 
-//Easy setting computer move - random generation of (x,y), Loops until empty square is selected, add 'o' at gameboard[x][y], calls insertShield, calls winCheck
+//Easy setting computer move - random generation of (x,y), Loops until empty square is selected, add curPlayer icon at gameboard[x][y], calls insertIcon, calls winCheck & tieCheck, passes current player back to playerOne
 var computerMove = function () {
   var x = Math.floor(Math.random() * 3)
   var y = Math.floor(Math.random() * 3)
   var curID = x.toString() + y.toString();
 
   if( gameboard[x][y] === "" ) {
-    gameboard[x][y] = "o";
-    insertShield(curID);
+    gameboard[x][y] = curPlayer.icon;
+    insertIcon(curID);
   } else {
     computerMove();
-    return;
   }
 
   if(winCheck(x,y)) {
@@ -49,9 +68,10 @@ var computerMove = function () {
   } else if(tieCheck()) {
     swal({title: "It's a Tie!"},resetBoard);
   }
+  curPlayer = playerOne
 };
 
-//Player move, called when square is clicked. id of 'this' square is converted to (x,y), add 'x' at gameboard[x][y], calls insertCross
+//Player move, called when square is clicked. id of 'this' square is converted to (x,y), adds curent player icon at gameboard[x][y], calls insertIcon, calls winCheck & tieCheck.
 var playerMove = function () {
   var $curSquare = $( this );
   var $curID = $curSquare.attr("id");
@@ -59,23 +79,30 @@ var playerMove = function () {
   var y = $curID[1];
 
   if( gameboard[x][y] === "" ) {
-    gameboard[x][y] = "x"
-    insertCross($curID);
+    gameboard[x][y] = curPlayer.icon
+    insertIcon($curID);
   } else {
     shakeIcon($curID);
     return;
   }
 
   if(winCheck(x,y)) {
-    swal({title: "Player Wins!"},resetBoard);
+    swal({title: curPlayer.name + " Wins!"},resetBoard);
   } else if(tieCheck()) {
     swal({title: "It's a Tie!"},resetBoard);
   } else {
-    window.setTimeout( computerMove, 200 );
+    if(curPlayer === playerOne) {
+      curPlayer = playerTwo;
+    } else {
+      curPlayer = playerOne;
+    }
+    if(!curPlayer.human){
+      window.setTimeout( computerMove, 200 );
+    }
   }
 };
 
-// check each line for win condition.
+// check each line for win condition, based on most recent placement of icon (computer || player).
 var winCheck = function(x,y) {
 
   var horString = ""
@@ -117,8 +144,8 @@ var winCheck = function(x,y) {
   }
 };
 
+// Check gameboard array, if all locations are occupied, return true. Only called after win check.
 var tieCheck = function() {
-  // debugger;
   for( var i = 0; i < gameboard.length; i++ ){
     for( var j = 0; j < gameboard[i].length; j ++ ) {
       if( gameboard[i][j] === "" ) {
@@ -151,7 +178,24 @@ var resetBoard = function() {
 
 $( ".square" ).on( "click", playerMove );
 
-// Hardmode computer move..... pseudo to come...
+// Hardmode computer move...
+// If center is empty play there
+//
+// If any win line has two of the same, play there (functions to block or win)
 var computerMoveHard = function() {
+
+};
+
+
+var menuSplash = function() {
+  var $bgDiv = $( "<div></div>" )
+  var $menuDiv = $( "<div></div>" )
+
+  $bgDiv.attr("class", "menuBG");
+  $menuDiv.attr("class", "menu");
+
+  $( ".flexContainer" ).css("-webkit-filter", "blur(5px)")
+  $( "body" ).prepend($bgDiv);
+  $( ".menuBG" ).prepend($menuDiv);
 
 };
