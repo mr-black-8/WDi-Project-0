@@ -52,9 +52,12 @@ var shakeIcon = function (iD) {
 
 //Easy setting computer move - random generation of (x,y), Loops until empty square is selected, add curPlayer icon at gameboard[x][y], calls insertIcon, calls winCheck & tieCheck, passes current player back to playerOne
 var computerMove = function () {
-  var x = Math.floor(Math.random() * 3)
-  var y = Math.floor(Math.random() * 3)
-  var curID = x.toString() + y.toString();
+  // var x = Math.floor(Math.random() * 3)
+  // var y = Math.floor(Math.random() * 3)
+  // var curID = x.toString() + y.toString();
+  var curID = computerMoveHard();
+  var x = parseInt(curID[0]);
+  var y = parseInt(curID[1]);
 
   if( gameboard[x][y] === "" ) {
     gameboard[x][y] = curPlayer.icon;
@@ -179,10 +182,77 @@ var resetBoard = function() {
 $( ".square" ).on( "click", playerMove );
 
 // Hardmode computer move...
+// If any win line has two of the same, play there (functions as a block or win)
 // If center is empty play there
-//
-// If any win line has two of the same, play there (functions to block or win)
+// If center is taken play a corner
+
 var computerMoveHard = function() {
+  //Loop horizontal lines, if line conatins two of the same icon, return empty square on that line
+  for(var i = 0; i < 3; i++){
+    var checkStr = "";
+    var iD = "";
+    for(var j = 0; j < 3; j++){
+      checkStr += gameboard[i][j];
+      if(gameboard[i][j] === "") {
+        iD = "" + i + j;
+      }
+    }
+    if(checkStr.length === 2 && checkStr[0] === checkStr[1]) {
+      return iD;
+    }
+  }
+
+  //Loop Vertical lines, if line conatins two of the same icon, return empty square on that line
+  for(var i = 0; i < 3; i++){
+    var checkStr = "";
+    var iD = "";
+    for(var j = 0; j < 3; j++){
+      checkStr += gameboard[j][i];
+      if(gameboard[j][i] === "") {
+        iD = "" + j + i;
+      }
+    }
+    if(checkStr.length === 2 && checkStr[0] === checkStr[1]) {
+      return iD;
+    }
+  }
+
+  //Check diagonals for two of same icon, if true return empty square of that line
+  var diaStr = "";
+  var iD = "";
+  for(var i = 0; i < 3; i++){
+    diaStr += gameboard[i][i];
+    if(gameboard[i][i] === "") {
+      iD = "" + i + i;
+    }
+  }
+  if(diaStr.length === 2 && diaStr[0] === diaStr[1]) {
+    return iD;
+  }
+
+  var diaStr = "";
+  var iD = "";
+  for( var i = 0; i < 3; i++ ) {
+    var n = (3 - 1 - i)
+    diaStr += gameboard[i][n];
+    if(gameboard[i][n] === ""){
+      iD = "" + i + n;
+    }
+  }
+  if(diaStr.length === 2 && diaStr[0] === diaStr[1]) {
+    return iD;
+  }
+
+  //return center if empty (always play center if going first)
+  if(gameboard[1][1] === ""){
+    return "11";
+  }
+
+  // Return random if none of the above passe
+  var x = Math.floor(Math.random() * 3)
+  var y = Math.floor(Math.random() * 3)
+  var curID = x.toString() + y.toString();
+  return curID;
 
 };
 
