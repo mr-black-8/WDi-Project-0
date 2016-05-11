@@ -71,6 +71,8 @@ var computerMove = function () {
   if(winCheck(x,y)) {
     swal({title: "Computer Wins!"},resetBoard);
     curPlayer.score += 1;
+    $(".leftBar h1").text(playerOne.score);
+    $(".rightBar h1").text(playerTwo.score);
   } else if(tieCheck()) {
     swal({title: "It's a tie!"},resetBoard);
   }
@@ -95,6 +97,8 @@ var playerMove = function () {
   if(winCheck(x,y)) {
     swal({title: curPlayer.name + " Wins!"},resetBoard);
     curPlayer.score += 1;
+    $(".leftBar h1").text(playerOne.score);
+    $(".rightBar h1").text(playerTwo.score);
   } else if(tieCheck()) {
     swal({title: "It's a tie!"},resetBoard);
   } else {
@@ -191,6 +195,17 @@ var resetBoard = function() {
 // If center is taken play a corner
 
 var computerMoveHard = function() {
+  //get turn count
+  var curTurn;
+  var turnStr = "";
+
+  for( var i = 0; i < gameboard.length; i++ ){
+    for( var j = 0; j < gameboard[i].length; j ++ ) {
+      turnStr += gameboard[i][j];
+    }
+  }
+  curTurn = turnStr.length;
+
   //Loop horizontal lines, if line conatins two of the same icon, return empty square on that line
   for(var i = 0; i < 3; i++){
     var checkStr = "";
@@ -252,6 +267,11 @@ var computerMoveHard = function() {
     return "11";
   }
 
+  //if turn two and center is marked, return corner.
+  if(curTurn === 2 && gameboard[1][1] !== "") {
+    return "20";
+  }
+
   // Return random if none of the above passe
   var x = Math.floor(Math.random() * 3)
   var y = Math.floor(Math.random() * 3)
@@ -303,8 +323,8 @@ var addSinglePlayInput = function() {
 
 //Assign values to playerOne object and opposites to playerTwo(computer)
 var singlePlaySubmit = function() {
-  playerTwo.human = false;
   playerOne.name = $("#nameP1").val()
+  playerOne.score = 0;
 
   if($("#factionP1").prop("checked")){
     playerOne.faction = "Christian";
@@ -315,8 +335,11 @@ var singlePlaySubmit = function() {
   playerOne.iconSrc = $(".iconSelectP1 .active").attr("src");
 
   //set playerTwo values opposite to playerOne selection
+  playerTwo.human = false;
+  playerTwo.score = 0;
   if(playerOne.faction === "Christian") {
     playerTwo.faction = "Norse";
+    playerTwo.name = "Thor";
 
     if(playerOne.iconSrc === "images/crosstp.png"){
       playerTwo.iconSrc = "images/shieldtp.png";
@@ -326,6 +349,7 @@ var singlePlaySubmit = function() {
 
   } else {
     playerTwo.faction = "Christian";
+    playerTwo.name = "Christ";
 
     if(playerOne.iconSrc === "images/axetp.png"){
       playerTwo.iconSrc = "images/halotp.png";
@@ -333,8 +357,25 @@ var singlePlaySubmit = function() {
       playerTwo.iconSrc = "images/crosstp.png";
     }
   }
-
+  setSideBar();
   clearMenu();
+};
+
+var addMultiPlayInput = function() {
+  $(".headImg").css("display", "none");
+  $(".buttons").css("display", "none");
+  $(".multiPlayInput").css("display", "flex");
+};
+
+//set side bar details based on player objects, show side bars
+var setSideBar = function(){
+  $(".leftBar h4").text(playerOne.name);
+  $(".leftBar img").attr("src", playerOne.iconSrc);
+
+  $(".rightBar h4").text(playerTwo.name);
+  $(".rightBar img").attr("src", playerTwo.iconSrc);
+
+  $(".leftBar, .rightBar").css("display","flex");
 };
 
 $(".butSP").on("click", function() {
@@ -342,8 +383,7 @@ $(".butSP").on("click", function() {
 });
 
 $(".butMP").on("click", function() {
-  playerTwo.human = true;
-  clearMenu();
+  addMultiPlayInput();
 });
 
 //toggle faction img & icon selection for single player.

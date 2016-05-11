@@ -20,6 +20,7 @@
         <button class="butMP">Multi Player</button>
       </div>
 
+<!-- Single Play Select Start -->
       <div class="singlePlayInput">
         <label>Name: <input id="nameP1" type="text"></label>
         <label>Choose your faction <input id="factionP1" type="checkbox" checked="checked"></label>
@@ -31,16 +32,50 @@
         </div>
         <button class="singlePlaySubmit">BEGIN!</button>
       </div>
+<!-- Single Play Select End -->
 
-      <!-- <div class="multiPlayInput">
-        <label>Player 2 name: <input id="nameP1" type="text"></label>
-      </div> -->
+<!-- Multi Play Select Start -->
+      <div class="multiPlayInput">
+
+        <div class="p1">
+          <label>Player One Name: <input id="nameP1" type="text"></label>
+          <label>Player One faction <input id="factionP1" type="checkbox" checked="checked"></label>
+          <img src="images/god.png" class="factionImg">
+          <p> Player One icon </p>
+          <div class="iconSelectP1">
+            <img src="images/halotp.png">
+            <img src="images/crosstp.png" class="active">
+          </div>
+        </div>
+
+        <div class="p2">
+          <label>Player Two Name: <input id="nameP2" type="text"></label>
+          <label>Player Two faction <input id="factionP2" type="checkbox" checked=""></label>
+          <img src="images/thor.png" class="factionImg">
+          <p> Player Two icon </p>
+          <div class="iconSelectP2">
+            <img src="images/shieldtp.png">
+            <img src="images/axetp.png" class="active">
+          </div>
+        </div>
+        <button class="multiPlaySubmit">BEGIN!</button>
+
+      </div>
+
+<!-- Multi Play Select End -->
+
     </div>
   </header>
 
   <div class="flexContainer">
 
-    <!-- <div class="leftBar"></div> -->
+    <div class="leftBar">
+      <h4>Player 1</h4>
+      <img src="images/shieldtp.png" class="sideBarImg">
+      <div class="score">
+        <h1>0</h1>
+      </div>
+    </div>
 
     <div class="gameboard">
 
@@ -56,7 +91,13 @@
 
     </div>
 
-    <!-- <div class="rightBar"></div> -->
+    <div class="rightBar">
+      <h4>Player 2</h4>
+      <img src="images/crosstp.png" class="sideBarImg">
+      <div class="score">
+        <h1>0</h1>
+      </div>
+    </div>
 
   </div>
 
