@@ -185,8 +185,6 @@ var resetBoard = function() {
   });
 };
 
-$( ".square" ).on( "click", playerMove );
-
 // Hardmode computer move...
 // If any win line has two of the same, play there (functions as a block or win)
 // If center is empty play there
@@ -290,3 +288,86 @@ var addLoadOver = function() {
 var removeLoadOver = function() {
   $(".coverBG").remove();
 }
+
+//Hide header
+var clearMenu = function() {
+  $("header").css("display","none");
+};
+
+//Hide title image & play select buttons, show single player input screen
+var addSinglePlayInput = function() {
+  $(".headImg").css("display", "none");
+  $(".buttons").css("display", "none");
+  $(".singlePlayInput").css("display", "flex");
+};
+
+//Assign values to playerOne object and opposites to playerTwo(computer)
+var singlePlaySubmit = function() {
+  playerTwo.human = false;
+  playerOne.name = $("#nameP1").val()
+
+  if($("#factionP1").prop("checked")){
+    playerOne.faction = "Christian";
+  } else {
+    playerOne.faction = "Norse";
+  }
+
+  playerOne.iconSrc = $(".iconSelectP1 .active").attr("src");
+
+  //set playerTwo values opposite to playerOne selection
+  if(playerOne.faction === "Christian") {
+    playerTwo.faction = "Norse";
+
+    if(playerOne.iconSrc === "images/crosstp.png"){
+      playerTwo.iconSrc = "images/shieldtp.png";
+    } else {
+      playerTwo.iconSrc = "images/axetp.png";
+    }
+
+  } else {
+    playerTwo.faction = "Christian";
+
+    if(playerOne.iconSrc === "images/axetp.png"){
+      playerTwo.iconSrc = "images/halotp.png";
+    } else {
+      playerTwo.iconSrc = "images/crosstp.png";
+    }
+  }
+
+  clearMenu();
+};
+
+$(".butSP").on("click", function() {
+  addSinglePlayInput();
+});
+
+$(".butMP").on("click", function() {
+  playerTwo.human = true;
+  clearMenu();
+});
+
+//toggle faction img & icon selection for single player.
+$("#factionP1").on("click", function(){
+
+  if($(this).prop("checked")){
+    $(this).parent().next().attr("src","images/god.png");
+    $(".iconSelectP1 img:nth-child(1)").attr("src","images/halotp.png");
+    $(".iconSelectP1 img:nth-child(2)").attr("src","images/crosstp.png");
+
+  } else {
+    $(this).parent().next().attr("src","images/thor.png");
+    $(".iconSelectP1 img:nth-child(1)").attr("src","images/shieldtp.png");
+    $(".iconSelectP1 img:nth-child(2)").attr("src","images/axetp.png");
+
+  }
+
+});
+
+//Toggle 'active' class on icon select for P1
+$(".iconSelectP1 img").on("click", function() {
+  $(".iconSelectP1 img").toggleClass("active");
+});
+
+$(".singlePlaySubmit").on("click", singlePlaySubmit)
+
+$( ".square" ).on( "click", playerMove );
