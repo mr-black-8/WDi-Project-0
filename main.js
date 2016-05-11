@@ -31,16 +31,6 @@ var insertIcon = function (iD) {
   return;
 };
 
-//Animate Cross image to square based on id paramater given
-var insertCross = function (iD) {
-  var $curID = $( "#" + iD )
-  $curID.children().attr("src", "images/crosstp.png");
-  $curID.children().addClass("animated bounceIn").one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-    $(this).removeClass();
-  });
-  return;
-};
-
 //Shake animation based in id paramater given (call if user clicks on occupyed square)
 var shakeIcon = function (iD) {
   var $curID = $( "#" + iD )
@@ -189,11 +179,84 @@ var resetBoard = function() {
   });
 };
 
+//Basic check for blocking moves and winning moves
+var computerMoveMed = function() {
+  //Loop horizontal lines, if line conatins two of the same icon, return empty square on that line
+  for(var i = 0; i < 3; i++){
+    var checkStr = "";
+    var iD = "";
+    for(var j = 0; j < 3; j++){
+      checkStr += gameboard[i][j];
+      if(gameboard[i][j] === "") {
+        iD = "" + i + j;
+      }
+    }
+    if(checkStr.length === 2 && checkStr[0] === checkStr[1]) {
+      return iD;
+    }
+  }
+
+  //Loop Vertical lines, if line conatins two of the same icon, return empty square on that line
+  for(var i = 0; i < 3; i++){
+    var checkStr = "";
+    var iD = "";
+    for(var j = 0; j < 3; j++){
+      checkStr += gameboard[j][i];
+      if(gameboard[j][i] === "") {
+        iD = "" + j + i;
+      }
+    }
+    if(checkStr.length === 2 && checkStr[0] === checkStr[1]) {
+      return iD;
+    }
+  }
+
+  //Check diagonals for two of same icon, if true return empty square of that line
+  var diaStr = "";
+  var iD = "";
+  for(var i = 0; i < 3; i++){
+    diaStr += gameboard[i][i];
+    if(gameboard[i][i] === "") {
+      iD = "" + i + i;
+    }
+  }
+  if(diaStr.length === 2 && diaStr[0] === diaStr[1]) {
+    return iD;
+  }
+
+  var diaStr = "";
+  var iD = "";
+  for( var i = 0; i < 3; i++ ) {
+    var n = (3 - 1 - i)
+    diaStr += gameboard[i][n];
+    if(gameboard[i][n] === ""){
+      iD = "" + i + n;
+    }
+  }
+  if(diaStr.length === 2 && diaStr[0] === diaStr[1]) {
+    return iD;
+  }
+
+  //return center if empty (always play center if going first)
+  if(gameboard[1][1] === ""){
+    return "11";
+  }
+
+  // Return random if none of the above passe
+  var x = Math.floor(Math.random() * 3)
+  var y = Math.floor(Math.random() * 3)
+  var curID = x.toString() + y.toString();
+  return curID;
+
+};
+
+
 // Hardmode computer move...
 // If any win line has two of the same, play there (functions as a block or win)
 // If center is empty play there
 // If center is taken play a corner
 
+//Additional logic beyond black & win checks
 var computerMoveHard = function() {
   //get turn count
   var curTurn;
@@ -205,7 +268,7 @@ var computerMoveHard = function() {
     }
   }
   curTurn = turnStr.length;
-
+  
   //Loop horizontal lines, if line conatins two of the same icon, return empty square on that line
   for(var i = 0; i < 3; i++){
     var checkStr = "";
@@ -390,12 +453,12 @@ $(".butMP").on("click", function() {
 $("#factionP1").on("click", function(){
 
   if($(this).prop("checked")){
-    $(this).parent().next().attr("src","images/god.png");
+    $(this).parent().next().attr("src","images/preist.png");
     $(".iconSelectP1 img:nth-child(1)").attr("src","images/halotp.png");
     $(".iconSelectP1 img:nth-child(2)").attr("src","images/crosstp.png");
 
   } else {
-    $(this).parent().next().attr("src","images/thor.png");
+    $(this).parent().next().attr("src","images/viking.png");
     $(".iconSelectP1 img:nth-child(1)").attr("src","images/shieldtp.png");
     $(".iconSelectP1 img:nth-child(2)").attr("src","images/axetp.png");
 

@@ -74,7 +74,7 @@ body {
   z-index: 1;
 }
 
-.headImg {
+.headImg, .titleImg {
   margin: auto;
   margin-top: 0;
 }
@@ -87,7 +87,7 @@ body {
 
 .buttons {
   flex-basis: 600px;
-  margin: auto;
+  margin: 25px auto;
 }
 
 .butSP,
@@ -120,7 +120,6 @@ body {
 }
 
 .factionImg {
-  width: 200px;
   height: 200px;
 }
 
