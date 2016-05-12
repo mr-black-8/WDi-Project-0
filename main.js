@@ -20,6 +20,7 @@ var playerTwo = {
 };
 
 var curPlayer = playerOne;
+var difficulty = 0;
 
 //Animate Shield image to square based on id paramater given
 var insertIcon = function (iD) {
@@ -42,10 +43,14 @@ var shakeIcon = function (iD) {
 
 //Easy setting computer move - random generation of (x,y), Loops until empty square is selected, add curPlayer icon at gameboard[x][y], calls insertIcon, calls winCheck & tieCheck, passes current player back to playerOne
 var computerMove = function () {
-  // var x = Math.floor(Math.random() * 3)
-  // var y = Math.floor(Math.random() * 3)
-  // var curID = x.toString() + y.toString();
-  var curID = computerMoveHard();
+  if(difficulty === 0) {
+    var curID = computerMoveEz();
+  } else if(difficulty === 1) {
+    var curID = computerMoveMed();
+  } else {
+    var curID = computerMoveHard();
+  }
+
   var x = parseInt(curID[0]);
   var y = parseInt(curID[1]);
 
@@ -179,7 +184,15 @@ var resetBoard = function() {
   });
 };
 
-//Basic check for blocking moves and winning moves
+//Easiest computer move, selections chosen randomly.
+var computerMoveEz = function() {
+  var x = Math.floor(Math.random() * 3);
+  var y = Math.floor(Math.random() * 3);
+  var curID = x.toString() + y.toString();
+  return curID;
+};
+
+//Basic checks for center square, blocking moves, and winning moves. Else random selection.
 var computerMoveMed = function() {
   //Loop horizontal lines, if line conatins two of the same icon, return empty square on that line
   for(var i = 0; i < 3; i++){
@@ -250,14 +263,10 @@ var computerMoveMed = function() {
 
 };
 
-
-// Hardmode computer move...
-// If any win line has two of the same, play there (functions as a block or win)
-// If center is empty play there
-// If center is taken play a corner
-
-//Additional logic beyond black & win checks
+//Additional logic beyond block & win checks
 var computerMoveHard = function() {
+  var cnrSqrs = ["00","02","20","22"]
+  var edgeSqrs = ["01","10","12","21"]
   //get turn count
   var curTurn;
   var turnStr = "";
@@ -268,7 +277,63 @@ var computerMoveHard = function() {
     }
   }
   curTurn = turnStr.length;
-  
+
+  //Loop horizontal lines, if line conatins two 'o', return empty square on that line
+  for(var i = 0; i < 3; i++){
+    var checkStr = "";
+    var iD = "";
+    for(var j = 0; j < 3; j++){
+      checkStr += gameboard[i][j];
+      if(gameboard[i][j] === "") {
+        iD = "" + i + j;
+      }
+    }
+    if((checkStr.length === 2 && checkStr[0] === checkStr[1]) && checkStr[0] === "o") {
+      return iD;
+    }
+  }
+
+  //Loop Vertical lines, if line conatins two 'o', return empty square on that line
+  for(var i = 0; i < 3; i++){
+    var checkStr = "";
+    var iD = "";
+    for(var j = 0; j < 3; j++){
+      checkStr += gameboard[j][i];
+      if(gameboard[j][i] === "") {
+        iD = "" + j + i;
+      }
+    }
+    if((checkStr.length === 2 && checkStr[0] === checkStr[1]) && checkStr[0] === 'o') {
+      return iD;
+    }
+  }
+
+  //Check diagonals for two 'o', if true return empty square of that line
+  var diaStr = "";
+  var iD = "";
+  for(var i = 0; i < 3; i++){
+    diaStr += gameboard[i][i];
+    if(gameboard[i][i] === "") {
+      iD = "" + i + i;
+    }
+  }
+  if((diaStr.length === 2 && diaStr[0] === diaStr[1]) && diaStr[0] === 'o') {
+    return iD;
+  }
+
+  var diaStr = "";
+  var iD = "";
+  for( var i = 0; i < 3; i++ ) {
+    var n = (3 - 1 - i)
+    diaStr += gameboard[i][n];
+    if(gameboard[i][n] === ""){
+      iD = "" + i + n;
+    }
+  }
+  if((diaStr.length === 2 && diaStr[0] === diaStr[1]) && diaStr[0] === 'o') {
+    return iD;
+  }
+
   //Loop horizontal lines, if line conatins two of the same icon, return empty square on that line
   for(var i = 0; i < 3; i++){
     var checkStr = "";
@@ -331,11 +396,32 @@ var computerMoveHard = function() {
   }
 
   //if turn two and center is marked, return corner.
-  if(curTurn === 2 && gameboard[1][1] !== "") {
-    return "20";
+  if(curTurn === 1 && gameboard[1][1] !== "") {
+    var i = Math.floor(Math.random() * 4);
+    return cnrSqrs[i];
   }
 
-  // Return random if none of the above passe
+
+
+  //if turn four and no edge is marked, return corner, unless center is 'o', then return edge.
+  var edgeStr = "";
+
+  for(var i = 0; i < 4; i++) {
+    var xy = edgeSqrs[i];
+    var x = parseInt(xy[0]);
+    var y = parseInt(xy[1]);
+    edgeStr += gameboard[x][y]
+  }
+
+  if((curTurn === 3 && edgeStr === "") && gameboard[1][1] === 'o') {
+    var i = Math.floor(Math.random() * 4);
+    return edgeSqrs[i];
+  } else {
+    var i = Math.floor(Math.random() * 4);
+    return cnrSqrs[i];
+  }
+
+  // Return random if none of the above pass
   var x = Math.floor(Math.random() * 3)
   var y = Math.floor(Math.random() * 3)
   var curID = x.toString() + y.toString();
@@ -343,8 +429,7 @@ var computerMoveHard = function() {
 
 };
 
-
-var menuSplash = function() {
+var pauseSplash = function() {
   var $bgDiv = $( "<div></div>" )
   var $menuDiv = $( "<div></div>" )
 
@@ -424,6 +509,36 @@ var singlePlaySubmit = function() {
   clearMenu();
 };
 
+//Assign values to playerOne & playerTwo objects
+var multiPlaySubmit = function() {
+  playerOne.name = $("#mNameP1").val()
+  playerOne.score = 0;
+
+  if($("#mFactionP1").prop("checked")){
+    playerOne.faction = "Christian";
+  } else {
+    playerOne.faction = "Norse";
+  }
+
+  playerOne.iconSrc = $(".mIconSelectP1 .active").attr("src");
+
+  //set playerTwo values opposite to playerOne selection
+  playerTwo.human = true;
+  playerTwo.name = $("#mNameP2").val()
+  playerTwo.score = 0;
+
+  if($("#mFactionP2").prop("checked")){
+    playerTwo.faction = "Christian";
+  } else {
+    playerTwo.faction = "Norse";
+  }
+
+  playerTwo.iconSrc = $(".mIconSelectP2 .active").attr("src");
+  setSideBar();
+  clearMenu();
+};
+
+//Hide title image & play select buttons, show multi player input screen
 var addMultiPlayInput = function() {
   $(".headImg").css("display", "none");
   $(".buttons").css("display", "none");
@@ -441,6 +556,17 @@ var setSideBar = function(){
   $(".leftBar, .rightBar").css("display","flex");
 };
 
+//reset player objects to default, show header menu
+var resetGame = function() {
+  playerOne.name = "Player 1";
+  playerOne.score = 0;
+  playerTwo.name = "Player 2";
+  playerTwo.score = 0;
+  resetBoard();
+  $("header, .headImg, .buttons").css("display", "block");
+  $(".multiPlayInput, .singlePlayInput, .leftBar, .rightBar").css("display", "none");
+}
+
 $(".butSP").on("click", function() {
   addSinglePlayInput();
 });
@@ -449,7 +575,7 @@ $(".butMP").on("click", function() {
   addMultiPlayInput();
 });
 
-//toggle faction img & icon selection for single player.
+//toggle faction img & icon selection option single play.
 $("#factionP1").on("click", function(){
 
   if($(this).prop("checked")){
@@ -466,11 +592,66 @@ $("#factionP1").on("click", function(){
 
 });
 
-//Toggle 'active' class on icon select for P1
-$(".iconSelectP1 img").on("click", function() {
-  $(".iconSelectP1 img").toggleClass("active");
+//toggle faction img & icon selection option multi play player one.
+$("#mFactionP1").on("click", function(){
+
+  if($(this).prop("checked")){
+    $(this).parent().next().attr("src","images/preist.png");
+    $(".mIconSelectP1 img:nth-child(1)").attr("src","images/halotp.png");
+    $(".mIconSelectP1 img:nth-child(2)").attr("src","images/crosstp.png");
+
+  } else {
+    $(this).parent().next().attr("src","images/viking.png");
+    $(".mIconSelectP1 img:nth-child(1)").attr("src","images/shieldtp.png");
+    $(".mIconSelectP1 img:nth-child(2)").attr("src","images/axetp.png");
+
+  }
+
 });
 
-$(".singlePlaySubmit").on("click", singlePlaySubmit)
+//toggle faction img & icon selection option multi play player two.
+$("#mFactionP2").on("click", function(){
+
+  if($(this).prop("checked")){
+    $(this).parent().next().attr("src","images/preist.png");
+    $(".mIconSelectP2 img:nth-child(1)").attr("src","images/halotp.png");
+    $(".mIconSelectP2 img:nth-child(2)").attr("src","images/crosstp.png");
+
+  } else {
+    $(this).parent().next().attr("src","images/viking.png");
+    $(".mIconSelectP2 img:nth-child(1)").attr("src","images/shieldtp.png");
+    $(".mIconSelectP2 img:nth-child(2)").attr("src","images/axetp.png");
+
+  }
+
+});
+
+//Toggle 'active' class on icon select for player one.
+$(".iconSelectP1, .mIconSelectP1 img").on("click", function() {
+  $(".iconSelectP1 img").toggleClass("active");
+  $(".mIconSelectP1 img").toggleClass("active");
+});
+
+//Toggle 'active' class on icon select for player two.
+$(".mIconSelectP2 img").on("click", function() {
+  $(".mIconSelectP2 img").toggleClass("active");
+});
+
+$(".singlePlaySubmitE").on("click", function(){
+  difficulty = 0;
+  singlePlaySubmit()
+});
+$(".singlePlaySubmitM").on("click", function(){
+  difficulty = 1;
+  singlePlaySubmit()
+})
+$(".singlePlaySubmitH").on("click", function(){
+  difficulty = 2;
+  singlePlaySubmit()
+})
+
+$(".multiPlaySubmit").on("click", multiPlaySubmit)
+
+$(".mainMenuBut").on("click", resetGame)
 
 $( ".square" ).on( "click", playerMove );

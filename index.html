@@ -6,11 +6,13 @@
   <title>Norse vs Crosses</title>
 
   <link rel="stylesheet" type="text/css" href="swal/sweetalert.css">
+  <link rel="stylesheet" href="toggle-switch.css">
   <link href='https://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="animate.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <button class="mainMenuBut">Reset Game</button>
   <header>
     <div class="startBG">
       <img src="images/header.png" class="headImg">
@@ -22,15 +24,27 @@
 
 <!-- Single Play Select Start -->
       <div class="singlePlayInput">
-        <label>Name: <input id="nameP1" type="text"></label>
-        <label>Choose your faction <input id="factionP1" type="checkbox" checked="checked"></label>
+        <h3>Name:</h3>
+        <input id="nameP1" type="text">
+        <h3>Select Faction</h3>
+        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="factionP1" checked="checked">
+          <label class="onoffswitch-label" for="factionP1">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
         <img src="images/preist.png" class="factionImg">
-        <p> Select your icon </p>
+        <h3> Select your icon </h3>
         <div class="iconSelectP1">
           <img src="images/halotp.png">
           <img src="images/crosstp.png" class="active">
         </div>
-        <button class="singlePlaySubmit">BEGIN!</button>
+        <div class="modeButtons">
+          <button class="singlePlaySubmitE">EASY</button>
+          <button class="singlePlaySubmitM">MEDIUM</button>
+          <button class="singlePlaySubmitH">HARD</button>
+        </div>
       </div>
 <!-- Single Play Select End -->
 
@@ -38,22 +52,38 @@
       <div class="multiPlayInput">
 
         <div class="p1">
-          <label>Player One Name: <input id="nameP1" type="text"></label>
-          <label>Player One faction <input id="factionP1" type="checkbox" checked="checked"></label>
+          <h3>Player One Name</h3>
+          <input id="mNameP1" type="text">
+          <h3>Player One faction</h3>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mFactionP1" checked="checked">
+            <label class="onoffswitch-label" for="mFactionP1">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
           <img src="images/preist.png" class="factionImg">
-          <p> Player One icon </p>
-          <div class="iconSelectP1">
+          <h3> Player One icon </h3>
+          <div class="mIconSelectP1">
             <img src="images/halotp.png">
             <img src="images/crosstp.png" class="active">
           </div>
         </div>
 
         <div class="p2">
-          <label>Player Two Name: <input id="nameP2" type="text"></label>
-          <label>Player Two faction <input id="factionP2" type="checkbox" checked=""></label>
+          <h3>Player Two Name</h3>
+          <input id="mNameP2" type="text">
+          <h3>Player Two faction</h3>
+          <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="mFactionP2">
+            <label class="onoffswitch-label" for="mFactionP2">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
           <img src="images/viking.png" class="factionImg">
-          <p> Player Two icon </p>
-          <div class="iconSelectP2">
+          <h3> Player Two icon </h3>
+          <div class="mIconSelectP2">
             <img src="images/shieldtp.png">
             <img src="images/axetp.png" class="active">
           </div>
@@ -61,13 +91,16 @@
         <button class="multiPlaySubmit">BEGIN!</button>
 
       </div>
-
 <!-- Multi Play Select End -->
 
     </div>
   </header>
 
   <div class="flexContainer">
+
+    <!-- <div class="topBar">
+      <p>RESTART</p>
+    </div> -->
 
     <div class="leftBar">
       <h4>Player 1</h4>
