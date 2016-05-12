@@ -402,23 +402,34 @@ var computerMoveHard = function() {
   }
 
 
-
-  //if turn four and no edge is marked, return corner, unless center is 'o', then return edge.
+  //if turn four and no edge is marked, return corner, unless center is 'o', then return edge. If edge is marked, return corner of that line...
   var edgeStr = "";
+  var edgeID = "";
 
   for(var i = 0; i < 4; i++) {
     var xy = edgeSqrs[i];
     var x = parseInt(xy[0]);
     var y = parseInt(xy[1]);
     edgeStr += gameboard[x][y]
+    if(gameboard[x][y] !== "") {
+      edgeID = "" + x + y;
+    }
   }
 
   if((curTurn === 3 && edgeStr === "") && gameboard[1][1] === 'o') {
+
     var i = Math.floor(Math.random() * 4);
     return edgeSqrs[i];
   } else {
-    var i = Math.floor(Math.random() * 4);
-    return cnrSqrs[i];
+    if(edgeID[0] === "1"){
+      var i = Math.floor(Math.random() * 2);
+      var iD = i + edgeID[1];
+      return iD;
+    } else {
+      var i = Math.floor(Math.random() * 2);
+      var iD = edgeID[0] + i;
+      return iD;
+    }
   }
 
   // Return random if none of the above pass
@@ -563,6 +574,8 @@ var resetGame = function() {
   playerTwo.name = "Player 2";
   playerTwo.score = 0;
   resetBoard();
+  $(".leftBar h1").text(playerOne.score);
+  $(".rightBar h1").text(playerTwo.score);
   $("header, .headImg, .buttons").css("display", "block");
   $(".multiPlayInput, .singlePlayInput, .leftBar, .rightBar").css("display", "none");
 }
