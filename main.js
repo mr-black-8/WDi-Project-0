@@ -390,6 +390,14 @@ var computerMoveHard = function() {
     return iD;
   }
 
+  //Hack of a bug fix because it's late and I'm tired.
+  if(curTurn > 6){
+    var x = Math.floor(Math.random() * 3)
+    var y = Math.floor(Math.random() * 3)
+    var curID = x.toString() + y.toString();
+    return curID;
+  }
+
   //return center if empty (always play center if going first)
   if(gameboard[1][1] === ""){
     return "11";
@@ -400,7 +408,6 @@ var computerMoveHard = function() {
     var i = Math.floor(Math.random() * 4);
     return cnrSqrs[i];
   }
-
 
   //if turn four and no edge is marked, return corner, unless center is 'o', then return edge. If edge is marked, return corner of that line...
   var edgeStr = "";
@@ -420,12 +427,15 @@ var computerMoveHard = function() {
 
     var i = Math.floor(Math.random() * 4);
     return edgeSqrs[i];
+  } else if ((curTurn === 3 && edgeStr === "") && gameboard[1][1] === 'x') {
+    var i = Math.floor(Math.random() * 4);
+    return cnrSqrs[i];
   } else {
-    if(edgeID[0] === "1"){
+    if(curTurn === 3 && edgeID[0] === "1"){
       var i = Math.floor(Math.random() * 2);
       var iD = i + edgeID[1];
       return iD;
-    } else {
+    } else if (curTurn === 3 && edgeID[1] === "1"){
       var i = Math.floor(Math.random() * 2);
       var iD = edgeID[0] + i;
       return iD;
